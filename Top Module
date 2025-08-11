@@ -1,0 +1,33 @@
+`timescale 1ns / 1ps
+
+module top_password_checker (
+    input wire clk,      // fast system clock, e.g., 100MHz
+    input wire reset,
+    input wire [3:0] password,
+    input wire enter,
+    output wire access_granted,
+    output wire error,
+    output wire timeout
+);
+
+    wire slow_clk;
+
+    // Instantiate clock divider to generate slow clock from fast clk
+    clock_divider clk_div_inst (
+        .c_out(slow_clk),
+        .clk(clk),
+        .rst(reset)
+    );
+
+    // Instantiate password security FSM driven by slow clock
+    password_security password_security_inst (
+        .clk(slow_clk),
+        .reset(reset),
+        .password(password),
+        .enter(enter),
+        .access_granted(access_granted),
+        .error(error),
+        .timeout(timeout)
+    );
+
+endmodule
