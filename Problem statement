@@ -1,0 +1,42 @@
+Problem Statement: Password Security Finite State Machine FSM:
+    Design a hardware module that manages access control using a 4-bit password input. The
+    system validates user entries against a predefined correct password and monitors consecutive
+    incorrect attempts to enforce a lockout after a threshold is reached.
+ Inputs:
+  clk
+  reset
+  password [3:0]
+  enter
+
+Outputs:
+ access_granted 
+ error 
+ timeout
+
+
+FSM States:
+  IDLE:
+   Wait for the enter signal to be asserted.
+   System is ready to process a new password input.
+
+CHECK_PASSWORD:
+   Compare the input password with the predefined correct password (4'b1011).
+   Determine if the password is correct or incorrect.
+
+ACCESS_GRANTED:
+   Output a one-clock pulse on access_granted.
+   Reset the wrong attempt counter to zero.
+   Transition back to IDLE on the next clock cycle.
+
+ERROR:
+  Output a one-clock pulse on error.
+  Increment the wrong attempt counter.
+  Transition to TIMEOUT if counter reaches 3, else back to IDLE.
+
+TIMEOUT:
+  Assert and hold timeout output high, locking the system.
+  Ignore all password inputs until reset is asserted.
+
+RESET:
+  Clear internal states, counters, outputs.
+  Transition back to IDLE on completion.
